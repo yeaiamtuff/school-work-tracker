@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>StudyOS</title>
+<title>JPStudySite</title>
 
 <style>
 *{box-sizing:border-box}
@@ -13,12 +13,13 @@
   --card:#fff;
   --text:#171717;
   --muted:#777;
-  --border:#e5e5e5;
-  --accent:#6c5ce7;
+  --border:#e2e2e7;
+  --accent:#6957e8;
+  --danger:#e53935;
 }
 
 body.dark{
-  --bg:#111217;
+  --bg:#101116;
   --card:#1b1d24;
   --text:#f5f5f5;
   --muted:#aaa;
@@ -30,70 +31,78 @@ body{
   font-family:Arial,Helvetica,sans-serif;
   background:var(--bg);
   color:var(--text);
-  transition:.25s;
+  transition:.2s;
 }
 
-.app{
-  display:flex;
-  min-height:100vh;
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
 }
 
 /* SIDEBAR */
 
 .sidebar{
-  width:235px;
-  background:var(--card);
-  border-right:1px solid var(--border);
-  padding:20px 14px;
   position:fixed;
   left:0;
   top:0;
   bottom:0;
+  width:240px;
+  background:var(--card);
+  border-right:1px solid var(--border);
+  padding:20px 14px;
   display:flex;
   flex-direction:column;
+  z-index:10;
 }
 
 .logo{
   font-size:24px;
   font-weight:800;
-  margin:8px 10px 30px;
+  margin:7px 10px 30px;
 }
 
-.nav button{
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.nav-btn{
   width:100%;
   border:0;
   background:transparent;
   color:var(--text);
-  padding:13px;
-  text-align:left;
+  padding:13px 14px;
   border-radius:10px;
-  margin-bottom:5px;
-  cursor:pointer;
-  font-size:15px;
+  text-align:left;
+  font-weight:600;
 }
 
-.nav button:hover,
-.nav button.active{
+.nav-btn:hover,
+.nav-btn.active{
   background:var(--accent);
   color:white;
 }
 
-.bottom{
+.sidebar-bottom{
   margin-top:auto;
 }
 
 /* MAIN */
 
 .main{
-  margin-left:235px;
-  width:calc(100% - 235px);
-  padding:28px;
+  margin-left:240px;
+  min-height:100vh;
+  padding:30px;
 }
 
 .page{
   display:none;
-  max-width:1000px;
-  margin:auto;
+  max-width:1050px;
+  margin:0 auto;
 }
 
 .page.active{
@@ -104,12 +113,14 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:25px;
+  margin-bottom:22px;
 }
 
 .topbar h1{
   margin:0;
 }
+
+/* CARDS */
 
 .card{
   background:var(--card);
@@ -119,59 +130,6 @@ body{
   margin-bottom:18px;
 }
 
-/* PROFILE */
-
-.profile{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-.profile-ring{
-  width:70px;
-  height:70px;
-  padding:4px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#ff2222,#ff2222);
-  box-shadow:0 0 12px #ff222288;
-  animation:pulse 2s infinite;
-}
-
-.profile-ring img{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  object-fit:cover;
-  background:#ddd;
-}
-
-@keyframes pulse{
-  50%{box-shadow:0 0 24px var(--ring)}
-}
-
-.level{
-  font-size:14px;
-  color:var(--muted);
-  margin-top:4px;
-}
-
-.xpbar{
-  height:9px;
-  background:var(--border);
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:12px;
-}
-
-.xpfill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#ff3333,#6c5ce7);
-  transition:.4s;
-}
-
-/* STATS */
-
 .stats{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -179,16 +137,73 @@ body{
 }
 
 .stat{
-  padding:18px;
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:14px;
+  border-radius:15px;
+  padding:18px;
+}
+
+.stat-label{
+  color:var(--muted);
 }
 
 .stat-number{
-  font-size:28px;
-  font-weight:bold;
+  font-size:30px;
+  font-weight:800;
   margin-top:7px;
+}
+
+/* PROFILE */
+
+.profile-row{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.profile-ring{
+  width:76px;
+  height:76px;
+  padding:4px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff2222,#ff5555);
+  box-shadow:0 0 15px rgba(255,40,40,.55);
+  animation:glow 2s infinite;
+}
+
+.profile-ring img{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  background:#ccc;
+}
+
+@keyframes glow{
+  50%{
+    transform:scale(1.025);
+  }
+}
+
+.level-text{
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.xp-bar{
+  width:100%;
+  height:9px;
+  background:var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.xp-fill{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#ff3030,#6b5ce7);
+  transition:.4s;
 }
 
 /* FORMS */
@@ -199,7 +214,9 @@ label{
   margin-top:15px;
 }
 
-input,select{
+input,
+select,
+textarea{
   width:100%;
   padding:12px;
   margin-top:6px;
@@ -207,18 +224,20 @@ input,select{
   border-radius:9px;
   background:var(--bg);
   color:var(--text);
+  outline:none;
 }
 
-button{
-  cursor:pointer;
+textarea{
+  min-height:300px;
+  resize:vertical;
 }
 
 .primary{
-  background:var(--accent);
-  color:white;
   border:0;
   border-radius:10px;
   padding:12px 17px;
+  background:var(--accent);
+  color:white;
   font-weight:bold;
 }
 
@@ -233,20 +252,25 @@ button{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:14px;
-  margin-bottom:12px;
   overflow:hidden;
+  margin-bottom:12px;
 }
 
 .class-header{
   padding:18px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   cursor:pointer;
   font-size:18px;
   font-weight:bold;
 }
 
-.assignments{
+.class-header:hover{
+  background:rgba(128,128,128,.07);
+}
+
+.assignment-list{
   display:none;
   border-top:1px solid var(--border);
 }
@@ -261,19 +285,19 @@ button{
 }
 
 .assignment-name{
-  font-weight:bold;
   font-size:17px;
+  font-weight:bold;
 }
 
-.info{
+.assignment-info{
   color:var(--muted);
   line-height:1.6;
   margin-top:6px;
 }
 
 .due{
-  font-weight:bold;
   margin-top:7px;
+  font-weight:bold;
 }
 
 .normal{color:var(--muted)}
@@ -288,8 +312,8 @@ button{
 }
 
 .complete{
-  background:#dff7e5;
-  color:#177333;
+  background:#dff5e4;
+  color:#16722e;
 }
 
 .delete{
@@ -298,80 +322,189 @@ button{
   margin-left:5px;
 }
 
-/* STOPWATCH */
+/* STUDY */
 
 .timer{
   text-align:center;
   font-size:65px;
-  font-weight:bold;
-  letter-spacing:2px;
+  font-weight:800;
   margin:35px 0;
+  letter-spacing:2px;
 }
 
 .timer-buttons{
   display:flex;
-  gap:10px;
   justify-content:center;
+  gap:10px;
 }
 
 .timer-buttons button{
   border:0;
   border-radius:10px;
-  padding:13px 22px;
+  padding:12px 20px;
   font-weight:bold;
 }
 
-.start{background:#6c5ce7;color:white}
-.pause{background:#ddd}
-.reset{background:#ffdddd;color:#a00000}
+.start{
+  background:var(--accent);
+  color:white;
+}
 
-/* PROFILE PAGE */
-
-.avatar-preview{
-  width:120px;
-  height:120px;
-  border-radius:50%;
-  object-fit:cover;
+.pause{
   background:#ddd;
-  display:block;
+  color:#222;
+}
+
+.reset{
+  background:#ffdede;
+  color:#a00000;
+}
+
+/* NOTES */
+
+.note-layout{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:16px;
+}
+
+.note-sidebar{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:12px;
+  min-height:500px;
+}
+
+.note-main{
+  min-width:0;
+}
+
+.note-class{
+  margin-bottom:6px;
+}
+
+.note-class-title{
+  padding:11px;
+  border-radius:9px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.note-class-title:hover{
+  background:rgba(128,128,128,.08);
+}
+
+.note-subjects{
+  display:none;
+  padding-left:10px;
+}
+
+.note-subject{
+  padding:9px;
+  border-radius:8px;
+  cursor:pointer;
+  color:var(--muted);
+}
+
+.note-subject:hover{
+  background:rgba(128,128,128,.08);
+  color:var(--text);
+}
+
+.note-names{
+  display:none;
+  padding-left:12px;
+}
+
+.note-name{
+  padding:8px;
+  border-radius:7px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.note-name:hover{
+  background:rgba(128,128,128,.08);
+}
+
+.note-view{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:25px;
+  min-height:500px;
+}
+
+.note-view h2{
+  margin-top:0;
+}
+
+.note-view-content{
+  white-space:pre-wrap;
+  line-height:1.7;
+}
+
+.back-notes{
+  border:0;
+  background:var(--bg);
+  color:var(--text);
+  border-radius:8px;
+  padding:9px 12px;
   margin-bottom:15px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px;
 }
 
 /* MOBILE */
 
-@media(max-width:700px){
+@media(max-width:750px){
+
   .sidebar{
-    width:70px;
+    width:72px;
     padding:15px 8px;
   }
 
   .logo{
     font-size:0;
+    text-align:center;
     margin-bottom:25px;
   }
 
   .logo:after{
-    content:"S";
-    font-size:23px;
+    content:"JP";
+    font-size:20px;
   }
 
-  .nav button{
-    text-align:center;
+  .nav-btn{
     font-size:0;
+    text-align:center;
+    padding:14px 5px;
   }
 
-  .nav button:first-letter{
+  .nav-btn::first-letter{
     font-size:20px;
   }
 
   .main{
-    margin-left:70px;
-    width:calc(100% - 70px);
-    padding:15px;
+    margin-left:72px;
+    padding:16px;
   }
 
   .stats{
     grid-template-columns:1fr;
+  }
+
+  .note-layout{
+    grid-template-columns:1fr;
+  }
+
+  .note-sidebar{
+    min-height:auto;
   }
 }
 </style>
@@ -379,358 +512,1472 @@ button{
 
 <body>
 
-<div class="app">
-
 <aside class="sidebar">
 
-<div class="logo">StudyOS</div>
+  <div class="logo">JPStudySite</div>
 
-<div class="nav">
+  <nav class="nav">
 
-<button class="active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
+    <button class="nav-btn active" data-page="dashboard">
+      🏠 Dashboard
+    </button>
 
-<button onclick="showPage('assignments',this)">📚 Assignments</button>
+    <button class="nav-btn" data-page="assignments">
+      📚 Assignments
+    </button>
 
-<button onclick="showPage('study',this)">⏱ Study</button>
+    <button class="nav-btn" data-page="notes">
+      📝 Notes
+    </button>
 
-<button onclick="showPage('profile',this)">👤 Profile</button>
+    <button class="nav-btn" data-page="study">
+      ⏱️ Study
+    </button>
 
-</div>
+    <button class="nav-btn" data-page="profile">
+      👤 Profile
+    </button>
 
-<div class="bottom">
+  </nav>
 
-<button class="nav button" onclick="showPage('settings',this)">
-⚙️ Settings
-</button>
+  <div class="sidebar-bottom">
 
-</div>
+    <button class="nav-btn" data-page="settings">
+      ⚙️ Settings
+    </button>
+
+  </div>
 
 </aside>
 
 
 <main class="main">
 
-<!-- DASHBOARD -->
+<!-- ================= DASHBOARD ================= -->
 
 <section id="dashboard" class="page active">
 
-<div class="topbar">
-<h1>Dashboard</h1>
-</div>
+  <div class="topbar">
+    <h1>Dashboard</h1>
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<div class="profile">
+    <div class="profile-row">
 
-<div class="profile-ring" id="dashboardRing">
-<img id="dashboardAvatar" src="">
-</div>
+      <div class="profile-ring">
+        <img id="dashboardAvatar">
+      </div>
 
-<div>
-<strong id="dashboardName">Student</strong>
-<div class="level">
-Level <span id="dashboardLevel">1</span>
-•
-<span id="dashboardXP">0</span> XP
-</div>
-</div>
+      <div>
+        <strong id="dashboardName">Student</strong>
 
-</div>
+        <div class="level-text">
+          Level <span id="dashboardLevel">1</span>
+          •
+          <span id="dashboardXP">0</span> XP
+        </div>
+      </div>
 
-<div class="xpbar">
-<div class="xpfill" id="dashboardXPFill"></div>
-</div>
+    </div>
 
-</div>
+    <div class="xp-bar">
+      <div class="xp-fill" id="dashboardXPFill"></div>
+    </div>
 
-<div class="stats">
+  </div>
 
-<div class="stat">
-Missing
-<div class="stat-number" id="missingCount">0</div>
-</div>
+  <div class="stats">
 
-<div class="stat">
-Assignments
-<div class="stat-number" id="assignmentCount">0</div>
-</div>
+    <div class="stat">
+      <div class="stat-label">Missing</div>
+      <div class="stat-number" id="missingCount">0</div>
+    </div>
 
-<div class="stat">
-Study XP
-<div class="stat-number" id="studyXP">0</div>
-</div>
+    <div class="stat">
+      <div class="stat-label">Assignments</div>
+      <div class="stat-number" id="assignmentCount">0</div>
+    </div>
 
-</div>
+    <div class="stat">
+      <div class="stat-label">Total XP</div>
+      <div class="stat-number" id="totalXP">0</div>
+    </div>
+
+  </div>
 
 </section>
 
 
-<!-- ASSIGNMENTS -->
+<!-- ================= ASSIGNMENTS ================= -->
 
 <section id="assignments" class="page">
 
-<div class="topbar">
-<h1>Assignments</h1>
-</div>
+  <div class="topbar">
+    <h1>Assignments</h1>
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>Add Assignment</h2>
+    <h2>Add Assignment</h2>
 
-<label>What class?</label>
-<input id="classInput" placeholder="Example: Math">
+    <label>What class?</label>
+    <input id="classInput" placeholder="Example: Science">
 
-<label>What type?</label>
-<select id="typeInput">
-<option>Homework</option>
-<option>Quiz</option>
-<option>Test</option>
-<option>Project</option>
-<option>Essay</option>
-<option>Worksheet</option>
-<option>Other</option>
-</select>
+    <label>What type of assignment?</label>
 
-<label>Rough time estimate</label>
-<input id="timeInput" placeholder="Example: 30 minutes">
+    <select id="typeInput">
+      <option>Homework</option>
+      <option>Quiz</option>
+      <option>Test</option>
+      <option>Project</option>
+      <option>Essay</option>
+      <option>Worksheet</option>
+      <option>Other</option>
+    </select>
 
-<label>Name of assignment</label>
-<input id="nameInput" placeholder="Example: Chapter 4 Review">
+    <label>Rough time estimate</label>
+    <input id="timeInput" placeholder="Example: 30 minutes">
 
-<label>Date due</label>
-<input id="dateInput" type="date">
+    <label>Name of assignment</label>
+    <input id="nameInput" placeholder="Example: Evolution Worksheet">
 
-<button class="primary full" onclick="addAssignment()">
-Add Assignment
-</button>
+    <label>Date due</label>
+    <input id="dateInput" type="date">
 
-</div>
+    <button class="primary full" id="addAssignmentBtn">
+      Add Assignment
+    </button>
 
-<div id="assignmentList"></div>
+  </div>
+
+  <div id="assignmentList"></div>
 
 </section>
 
 
-<!-- STUDY -->
+<!-- ================= NOTES ================= -->
+
+<section id="notes" class="page">
+
+  <div class="topbar">
+    <h1>Notes</h1>
+
+    <button class="primary" id="newNoteBtn">
+      + New Note
+    </button>
+  </div>
+
+  <div id="notesHome">
+
+    <div class="note-layout">
+
+      <div class="note-sidebar" id="noteSidebar"></div>
+
+      <div class="note-main">
+
+        <div class="note-view">
+
+          <h2>Choose a note</h2>
+
+          <p style="color:var(--muted)">
+            Pick a class, then a subject, then open a note.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div id="noteEditor" style="display:none">
+
+    <div class="card">
+
+      <h2>Create Note</h2>
+
+      <label>Class</label>
+      <input id="noteClassInput" placeholder="Example: Science">
+
+      <label>What is it about?</label>
+      <input id="noteSubjectInput" placeholder="Example: Evolution">
+
+      <label>Note name</label>
+      <input id="noteNameInput" placeholder="Example: Evolution Review">
+
+      <label>Notes</label>
+      <textarea id="noteContentInput"
+        placeholder="Write your notes here..."></textarea>
+
+      <button class="primary full" id="saveNoteBtn">
+        Save Note
+      </button>
+
+      <button class="small-btn" id="cancelNoteBtn">
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= STUDY ================= -->
 
 <section id="study" class="page">
 
-<div class="topbar">
-<h1>Study Timer</h1>
-</div>
+  <div class="topbar">
+    <h1>Study</h1>
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>Study Stopwatch</h2>
+    <h2>Study Stopwatch</h2>
 
-<p style="color:var(--muted)">
-Every minute studied = <b>2 XP</b>
-</p>
+    <p style="color:var(--muted)">
+      Every minute studied gives you <b>2 XP</b>.
+    </p>
 
-<div class="timer" id="timer">
-00:00:00
-</div>
+    <div class="timer" id="timer">
+      00:00:00
+    </div>
 
-<div class="timer-buttons">
+    <div class="timer-buttons">
 
-<button class="start" onclick="startTimer()">Start</button>
+      <button class="start" id="startTimerBtn">
+        Start
+      </button>
 
-<button class="pause" onclick="pauseTimer()">Pause</button>
+      <button class="pause" id="pauseTimerBtn">
+        Pause
+      </button>
 
-<button class="reset" onclick="resetTimer()">Reset</button>
+      <button class="reset" id="resetTimerBtn">
+        Reset
+      </button>
 
-</div>
+    </div>
 
-</div>
+    <p style="text-align:center;color:var(--muted);margin-top:20px">
+      XP is awarded when you pause the timer.
+    </p>
+
+  </div>
 
 </section>
 
 
-<!-- PROFILE -->
+<!-- ================= PROFILE ================= -->
 
 <section id="profile" class="page">
 
-<div class="topbar">
-<h1>Profile</h1>
-</div>
+  <div class="topbar">
+    <h1>Profile</h1>
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>Your Profile</h2>
+    <div class="profile-row">
 
-<div class="profile">
+      <div class="profile-ring">
+        <img id="profileAvatar">
+      </div>
 
-<div class="profile-ring">
-<img id="profileAvatar" src="">
-</div>
+      <div>
+        <h2 id="profileNameText">Student</h2>
+        <div class="level-text">
+          Level <span id="profileLevel">1</span>
+        </div>
+      </div>
 
-<div>
-<h3 id="profileNameText">Student</h3>
-<div>
-Level <span id="profileLevel">1</span>
-</div>
-</div>
+    </div>
 
-</div>
+    <label>Your name</label>
+    <input id="profileNameInput" placeholder="Your name">
 
-<label>Your name</label>
-<input id="nameInputProfile" placeholder="Your name">
+    <label>Profile picture</label>
+    <input id="avatarInput" type="file" accept="image/*">
 
-<label>Profile picture</label>
-<input type="file" id="avatarInput" accept="image/*">
+    <button class="primary full" id="saveProfileBtn">
+      Save Profile
+    </button>
 
-<button class="primary full" onclick="saveProfile()">
-Save Profile
-</button>
-
-</div>
+  </div>
 
 </section>
 
 
-<!-- SETTINGS -->
+<!-- ================= SETTINGS ================= -->
 
 <section id="settings" class="page">
 
-<div class="topbar">
-<h1>Settings</h1>
-</div>
+  <div class="topbar">
+    <h1>Settings</h1>
+  </div>
 
-<div class="card">
+  <div class="card">
 
-<h2>Appearance</h2>
+    <h2>Appearance</h2>
 
-<label>
-Dark Mode
-</label>
+    <label>Dark Mode</label>
 
-<select id="darkMode" onchange="changeTheme()">
-<option value="off">Off</option>
-<option value="on">On</option>
-</select>
+    <select id="darkModeSelect">
+      <option value="off">Off</option>
+      <option value="on">On</option>
+    </select>
 
-</div>
+  </div>
 
 </section>
 
 </main>
 
-</div>
-
 
 <script>
 
-/* =========================
+/* =========================================
    DATA
-========================= */
+========================================= */
 
 let assignments =
-JSON.parse(localStorage.getItem("assignments")) || [];
+  JSON.parse(localStorage.getItem("jpAssignments")) || [];
+
+let notes =
+  JSON.parse(localStorage.getItem("jpNotes")) || [];
 
 let user =
-JSON.parse(localStorage.getItem("studyUser")) || {
-
-name:"Student",
-
-avatar:"",
-
-xp:0
-
-};
+  JSON.parse(localStorage.getItem("jpUser")) || {
+    name:"Student",
+    avatar:"",
+    xp:0
+  };
 
 
-/* =========================
-   LEVEL SYSTEM
-========================= */
+/* =========================================
+   STORAGE
+========================================= */
 
-function xpForLevel(level){
-
-return Math.floor(
-100 * Math.pow(1.45, level - 1)
-);
-
+function saveAssignments(){
+  localStorage.setItem(
+    "jpAssignments",
+    JSON.stringify(assignments)
+  );
 }
 
-function getLevel(){
-
-let level = 1;
-
-let xp = user.xp;
-
-while(xp >= xpForLevel(level)){
-
-xp -= xpForLevel(level);
-
-level++;
-
-}
-
-return level;
-
-}
-
-function getLevelProgress(){
-
-let level = getLevel();
-
-let totalBefore = 0;
-
-for(let i=1;i<level;i++){
-
-totalBefore += xpForLevel(i);
-
-}
-
-let currentXP = user.xp - totalBefore;
-
-let needed = xpForLevel(level);
-
-return {
-level,
-current:currentXP,
-needed,
-percent:(currentXP/needed)*100
-};
-
-}
-
-
-/* =========================
-   XP
-========================= */
-
-function addXP(amount){
-
-user.xp += amount;
-
-saveUser();
-
-updateUI();
-
+function saveNotes(){
+  localStorage.setItem(
+    "jpNotes",
+    JSON.stringify(notes)
+  );
 }
 
 function saveUser(){
+  localStorage.setItem(
+    "jpUser",
+    JSON.stringify(user)
+  );
+}
 
-localStorage.setItem(
-"studyUser",
-JSON.stringify(user)
-);
+
+/* =========================================
+   LEVEL SYSTEM
+========================================= */
+
+function xpForLevel(level){
+
+  return Math.floor(
+    100 * Math.pow(1.45,level - 1)
+  );
+
+}
+
+function getLevelInfo(){
+
+  let level=1;
+  let remaining=user.xp;
+
+  while(remaining >= xpForLevel(level)){
+
+    remaining -= xpForLevel(level);
+    level++;
+
+  }
+
+  return {
+    level:level,
+    current:remaining,
+    needed:xpForLevel(level),
+    percent:
+      (remaining/xpForLevel(level))*100
+  };
 
 }
 
 
-/* =========================
-   PROFILE RING
-========================= */
+/* =========================================
+   XP
+========================================= */
+
+function addXP(amount){
+
+  user.xp += amount;
+
+  saveUser();
+  updateUI();
+
+}
+
+
+/* =========================================
+   RING COLORS
+========================================= */
 
 function updateRing(){
 
-let level = getLevel();
+  let level=getLevelInfo().level;
 
-let color1;
-let color2;
+  let color1;
+  let color2;
 
-if(level < 5){
+  if(level < 5){
 
-color1="#ff2222";
-col
+    color1="#ff2020";
+    color2="#ff5b5b";
+
+  }else if(level < 10){
+
+    color1="#168cff";
+    color2="#4ac5ff";
+
+  }else if(level < 20){
+
+    color1="#633cff";
+    color2="#b64cff";
+
+  }else if(level < 30){
+
+    color1="#c52dff";
+    color2="#ff38d0";
+
+  }else{
+
+    color1="#ff32b5";
+    color2="#6d3cff";
+
+  }
+
+  document
+    .querySelectorAll(".profile-ring")
+    .forEach(ring=>{
+
+      ring.style.background=
+        `linear-gradient(135deg,${color1},${color2})`;
+
+      ring.style.boxShadow=
+        `0 0 18px ${color1}99`;
+
+    });
+
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+document.querySelectorAll(".nav-btn")
+.forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    let page=button.dataset.page;
+
+    if(!page)return;
+
+    document
+      .querySelectorAll(".page")
+      .forEach(section=>{
+        section.classList.remove("active");
+      });
+
+    let target=document.getElementById(page);
+
+    if(target){
+      target.classList.add("active");
+    }
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach(btn=>{
+        btn.classList.remove("active");
+      });
+
+    button.classList.add("active");
+
+    if(page==="notes"){
+      renderNotesSidebar();
+    }
+
+  });
+
+});
+
+
+/* =========================================
+   ASSIGNMENTS
+========================================= */
+
+document
+  .getElementById("addAssignmentBtn")
+  .addEventListener("click",addAssignment);
+
+
+function addAssignment(){
+
+  let className=
+    document.getElementById("classInput")
+    .value.trim();
+
+  let type=
+    document.getElementById("typeInput").value;
+
+  let time=
+    document.getElementById("timeInput")
+    .value.trim();
+
+  let name=
+    document.getElementById("nameInput")
+    .value.trim();
+
+  let due=
+    document.getElementById("dateInput").value;
+
+  if(!className || !name || !due){
+
+    alert(
+      "Fill in the class, assignment name, and due date."
+    );
+
+    return;
+
+  }
+
+  assignments.push({
+    id:Date.now(),
+    className,
+    type,
+    time,
+    name,
+    due
+  });
+
+  saveAssignments();
+
+  document.getElementById("classInput").value="";
+  document.getElementById("timeInput").value="";
+  document.getElementById("nameInput").value="";
+  document.getElementById("dateInput").value="";
+
+  renderAssignments();
+
+}
+
+
+/* =========================================
+   ASSIGNMENT DATES
+========================================= */
+
+function daysUntil(date){
+
+  let today=new Date();
+
+  today.setHours(0,0,0,0);
+
+  let due=new Date(date+"T00:00:00");
+
+  return Math.ceil(
+    (due-today)/(1000*60*60*24)
+  );
+
+}
+
+function formatDate(date){
+
+  return new Date(date+"T00:00:00")
+    .toLocaleDateString(undefined,{
+      month:"short",
+      day:"numeric",
+      year:"numeric"
+    });
+
+}
+
+
+/* =========================================
+   RENDER ASSIGNMENTS
+========================================= */
+
+function renderAssignments(){
+
+  let container=
+    document.getElementById("assignmentList");
+
+  container.innerHTML="";
+
+  if(assignments.length===0){
+
+    container.innerHTML=`
+      <div class="card empty">
+        No assignments yet.
+      </div>
+    `;
+
+    updateUI();
+    return;
+
+  }
+
+  assignments.sort(
+    (a,b)=>new Date(a.due)-new Date(b.due)
+  );
+
+  let classes={};
+
+  assignments.forEach(a=>{
+
+    if(!classes[a.className]){
+      classes[a.className]=[];
+    }
+
+    classes[a.className].push(a);
+
+  });
+
+
+  let sortedClasses=
+    Object.keys(classes).sort((a,b)=>{
+
+      return new Date(classes[a][0].due)
+        -
+        new Date(classes[b][0].due);
+
+    });
+
+
+  sortedClasses.forEach(className=>{
+
+    let box=document.createElement("div");
+    box.className="class-box";
+
+    let header=document.createElement("div");
+    header.className="class-header";
+
+    header.innerHTML=`
+      <span>${escapeHTML(className)}</span>
+      <span>▼</span>
+    `;
+
+    let list=document.createElement("div");
+    list.className="assignment-list";
+
+    header.addEventListener("click",()=>{
+
+      list.style.display=
+        list.style.display==="block"
+        ?"none"
+        :"block";
+
+    });
+
+
+    classes[className].forEach(a=>{
+
+      let days=daysUntil(a.due);
+
+      let dueText;
+      let dueClass;
+
+      if(days<0){
+
+        dueText=
+          `OVERDUE by ${Math.abs(days)} day${Math.abs(days)===1?"":"s"}`;
+
+        dueClass="danger";
+
+      }else if(days===0){
+
+        dueText="DUE TODAY";
+        dueClass="danger";
+
+      }else if(days===1){
+
+        dueText="Due tomorrow";
+        dueClass="danger";
+
+      }else if(days<=3){
+
+        dueText=`Due in ${days} days`;
+        dueClass="warning";
+
+      }else{
+
+        dueText=`Due in ${days} days`;
+        dueClass="normal";
+
+      }
+
+
+      let div=document.createElement("div");
+      div.className="assignment";
+
+      div.innerHTML=`
+
+        <div class="assignment-name">
+          ${escapeHTML(a.name)}
+        </div>
+
+        <div class="assignment-info">
+
+          Type: ${escapeHTML(a.type)}<br>
+
+          ${
+            a.time
+            ?`Time estimate: ${escapeHTML(a.time)}<br>`
+            :""
+          }
+
+          Due: ${formatDate(a.due)}
+
+        </div>
+
+        <div class="due ${dueClass}">
+          ${dueText}
+        </div>
+
+        <button class="small-btn complete">
+          ✓ Complete (+25 XP)
+        </button>
+
+        <button class="small-btn delete">
+          Delete
+        </button>
+
+      `;
+
+
+      div
+        .querySelector(".complete")
+        .addEventListener("click",()=>{
+
+          completeAssignment(a.id);
+
+        });
+
+
+      div
+        .querySelector(".delete")
+        .addEventListener("click",()=>{
+
+          deleteAssignment(a.id);
+
+        });
+
+
+      list.appendChild(div);
+
+    });
+
+
+    box.appendChild(header);
+    box.appendChild(list);
+
+    container.appendChild(box);
+
+  });
+
+
+  updateUI();
+
+}
+
+
+/* =========================================
+   COMPLETE / DELETE
+========================================= */
+
+function completeAssignment(id){
+
+  assignments=
+    assignments.filter(a=>a.id!==id);
+
+  saveAssignments();
+
+  addXP(25);
+
+  renderAssignments();
+
+}
+
+function deleteAssignment(id){
+
+  assignments=
+    assignments.filter(a=>a.id!==id);
+
+  saveAssignments();
+
+  renderAssignments();
+
+}
+
+
+/* =========================================
+   NOTES
+========================================= */
+
+document
+  .getElementById("newNoteBtn")
+  .addEventListener("click",()=>{
+
+    document.getElementById("notesHome")
+      .style.display="none";
+
+    document.getElementById("noteEditor")
+      .style.display="block";
+
+  });
+
+
+document
+  .getElementById("cancelNoteBtn")
+  .addEventListener("click",()=>{
+
+    closeNoteEditor();
+
+  });
+
+
+document
+  .getElementById("saveNoteBtn")
+  .addEventListener("click",saveNote);
+
+
+function saveNote(){
+
+  let className=
+    document.getElementById("noteClassInput")
+    .value.trim();
+
+  let subject=
+    document.getElementById("noteSubjectInput")
+    .value.trim();
+
+  let name=
+    document.getElementById("noteNameInput")
+    .value.trim();
+
+  let content=
+    document.getElementById("noteContentInput")
+    .value;
+
+
+  if(!className || !subject || !name){
+
+    alert(
+      "Fill in the class, subject, and note name."
+    );
+
+    return;
+
+  }
+
+
+  notes.push({
+
+    id:Date.now(),
+    className,
+    subject,
+    name,
+    content
+
+  });
+
+
+  saveNotes();
+
+  document.getElementById("noteClassInput").value="";
+  document.getElementById("noteSubjectInput").value="";
+  document.getElementById("noteNameInput").value="";
+  document.getElementById("noteContentInput").value="";
+
+  closeNoteEditor();
+
+  renderNotesSidebar();
+
+}
+
+
+function closeNoteEditor(){
+
+  document.getElementById("noteEditor")
+    .style.display="none";
+
+  document.getElementById("notesHome")
+    .style.display="block";
+
+}
+
+
+/* =========================================
+   NOTES SIDEBAR
+========================================= */
+
+function renderNotesSidebar(){
+
+  let sidebar=
+    document.getElementById("noteSidebar");
+
+  sidebar.innerHTML="";
+
+  if(notes.length===0){
+
+    sidebar.innerHTML=`
+      <div class="empty">
+        No notes yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  let classes={};
+
+
+  notes.forEach(note=>{
+
+    if(!classes[note.className]){
+      classes[note.className]={};
+    }
+
+    if(!classes[note.className][note.subject]){
+      classes[note.className][note.subject]=[];
+    }
+
+    classes[note.className][note.subject]
+      .push(note);
+
+  });
+
+
+  Object.keys(classes)
+    .sort()
+    .forEach(className=>{
+
+      let classDiv=
+        document.createElement("div");
+
+      classDiv.className="note-class";
+
+      let classTitle=
+        document.createElement("div");
+
+      classTitle.className=
+        "note-class-title";
+
+      classTitle.textContent=
+        "📚 "+className;
+
+      let subjects=
+        document.createElement("div");
+
+      subjects.className="note-subjects";
+
+
+      classTitle.addEventListener("click",()=>{
+
+        subjects.style.display=
+          subjects.style.display==="block"
+          ?"none"
+          :"block";
+
+      });
+
+
+      Object.keys(classes[className])
+        .sort()
+        .forEach(subjectName=>{
+
+          let subjectDiv=
+            document.createElement("div");
+
+          subjectDiv.className="note-subject";
+
+          subjectDiv.textContent=
+            "▸ "+subjectName;
+
+          let names=
+            document.createElement("div");
+
+          names.className="note-names";
+
+
+          subjectDiv.addEventListener("click",event=>{
+
+            event.stopPropagation();
+
+            names.style.display=
+              names.style.display==="block"
+              ?"none"
+              :"block";
+
+          });
+
+
+          classes[className][subjectName]
+            .forEach(note=>{
+
+              let noteDiv=
+                document.createElement("div");
+
+              noteDiv.className="note-name";
+
+              noteDiv.textContent=
+                "📄 "+note.name;
+
+              noteDiv.addEventListener(
+                "click",
+                event=>{
+
+                  event.stopPropagation();
+
+                  openNote(note.id);
+
+                }
+              );
+
+              names.appendChild(noteDiv);
+
+            });
+
+
+          subjects.appendChild(subjectDiv);
+          subjects.appendChild(names);
+
+        });
+
+
+      classDiv.appendChild(classTitle);
+      classDiv.appendChild(subjects);
+
+      sidebar.appendChild(classDiv);
+
+    });
+
+}
+
+
+/* =========================================
+   OPEN NOTE
+========================================= */
+
+function openNote(id){
+
+  let note=
+    notes.find(n=>n.id===id);
+
+  if(!note)return;
+
+
+  document.getElementById("notesHome")
+    .style.display="block";
+
+  document.getElementById("noteEditor")
+    .style.display="none";
+
+
+  let main=
+    document.querySelector("#notes .note-main");
+
+  main.innerHTML=`
+
+    <div class="note-view">
+
+      <button class="back-notes" id="backNotesBtn">
+        ← Back to Notes
+      </button>
+
+      <h2>${escapeHTML(note.name)}</h2>
+
+      <p style="color:var(--muted)">
+        ${escapeHTML(note.className)}
+        •
+        ${escapeHTML(note.subject)}
+      </p>
+
+      <hr style="border:0;border-top:1px solid var(--border);margin:20px 0">
+
+      <div class="note-view-content">
+        ${escapeHTML(note.content)}
+      </div>
+
+      <button class="small-btn delete" id="deleteNoteBtn">
+        Delete Note
+      </button>
+
+    </div>
+
+  `;
+
+
+  document
+    .getElementById("backNotesBtn")
+    .addEventListener("click",()=>{
+
+      resetNoteView();
+
+    });
+
+
+  document
+    .getElementById("deleteNoteBtn")
+    .addEventListener("click",()=>{
+
+      notes=
+        notes.filter(n=>n.id!==id);
+
+      saveNotes();
+
+      resetNoteView();
+
+      renderNotesSidebar();
+
+    });
+
+}
+
+
+function resetNoteView(){
+
+  let main=
+    document.querySelector("#notes .note-main");
+
+  main.innerHTML=`
+
+    <div class="note-view">
+
+      <h2>Choose a note</h2>
+
+      <p style="color:var(--muted)">
+        Pick a class, then a subject, then open a note.
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================
+   STUDY TIMER
+========================================= */
+
+let seconds=0;
+let timerInterval=null;
+let timerRunning=false;
+let awardedMinutes=0;
+
+
+function updateTimer(){
+
+  let hours=
+    Math.floor(seconds/3600);
+
+  let minutes=
+    Math.floor((seconds%3600)/60);
+
+  let secs=
+    seconds%60;
+
+
+  document.getElementById("timer")
+    .textContent=
+
+    String(hours).padStart(2,"0")
+    +":"
+    +
+    String(minutes).padStart(2,"0")
+    +":"
+    +
+    String(secs).padStart(2,"0");
+
+}
+
+
+document
+  .getElementById("startTimerBtn")
+  .addEventListener("click",()=>{
+
+    if(timerRunning)return;
+
+    timerRunning=true;
+
+    timerInterval=setInterval(()=>{
+
+      seconds++;
+
+      updateTimer();
+
+    },1000);
+
+  });
+
+
+document
+  .getElementById("pauseTimerBtn")
+  .addEventListener("click",()=>{
+
+    if(!timerRunning)return;
+
+    timerRunning=false;
+
+    clearInterval(timerInterval);
+
+    let totalMinutes=
+      Math.floor(seconds/60);
+
+    let newMinutes=
+      totalMinutes-awardedMinutes;
+
+
+    if(newMinutes>0){
+
+      addXP(newMinutes*2);
+
+      awardedMinutes=totalMinutes;
+
+    }
+
+  });
+
+
+document
+  .getElementById("resetTimerBtn")
+  .addEventListener("click",()=>{
+
+    clearInterval(timerInterval);
+
+    timerRunning=false;
+
+    seconds=0;
+
+    awardedMinutes=0;
+
+    updateTimer();
+
+  });
+
+
+/* =========================================
+   PROFILE
+========================================= */
+
+document
+  .getElementById("saveProfileBtn")
+  .addEventListener("click",saveProfile);
+
+
+function saveProfile(){
+
+  let name=
+    document.getElementById("profileNameInput")
+    .value.trim();
+
+  if(name){
+    user.name=name;
+  }
+
+
+  let file=
+    document.getElementById("avatarInput")
+    .files[0];
+
+
+  if(file){
+
+    let reader=new FileReader();
+
+    reader.onload=e=>{
+
+      user.avatar=e.target.result;
+
+      saveUser();
+
+      updateUI();
+
+    };
+
+    reader.readAsDataURL(file);
+
+  }else{
+
+    saveUser();
+    updateUI();
+
+  }
+
+}
+
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+let savedTheme=
+  localStorage.getItem("jpDarkMode") || "off";
+
+document.getElementById("darkModeSelect")
+  .value=savedTheme;
+
+
+function applyTheme(mode){
+
+  if(mode==="on"){
+
+    document.body.classList.add("dark");
+
+  }else{
+
+    document.body.classList.remove("dark");
+
+  }
+
+}
+
+
+applyTheme(savedTheme);
+
+
+document
+  .getElementById("darkModeSelect")
+  .addEventListener("change",event=>{
+
+    let mode=event.target.value;
+
+    localStorage.setItem(
+      "jpDarkMode",
+      mode
+    );
+
+    applyTheme(mode);
+
+  });
+
+
+/* =========================================
+   UI
+========================================= */
+
+function updateUI(){
+
+  let info=getLevelInfo();
+
+
+  document.getElementById("dashboardName")
+    .textContent=user.name;
+
+  document.getElementById("dashboardLevel")
+    .textContent=info.level;
+
+  document.getElementById("dashboardXP")
+    .textContent=user.xp;
+
+  document.getElementById("totalXP")
+    .textContent=user.xp;
+
+  document.getElementById("profileNameText")
+    .textContent=user.name;
+
+  document.getElementById("profileLevel")
+    .textContent=info.level;
+
+
+  document.getElementById("dashboardXPFill")
+    .style.width=info.percent+"%";
+
+
+  document.getElementById("assignmentCount")
+    .textContent=assignments.length;
+
+
+  document.getElementById("missingCount")
+    .textContent=
+      assignments.filter(
+        a=>daysUntil(a.due)<0
+      ).length;
+
+
+  let defaultAvatar=
+    "data:image/svg+xml;charset=UTF-8,"+
+    encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg"
+      width="200" height="200">
+        <rect width="100%" height="100%" fill="#cccccc"/>
+        <text x="50%" y="58%"
+        text-anchor="middle"
+        font-size="75"
+        fill="#777">?</text>
+      </svg>
+    `);
+
+
+  document.getElementById("dashboardAvatar")
+    .src=user.avatar || defaultAvatar;
+
+  document.getElementById("profileAvatar")
+    .src=user.avatar || defaultAvatar;
+
+
+  document.getElementById("profileNameInput")
+    .value=user.name==="Student"?"":user.name;
+
+
+  updateRing();
+
+}
+
+
+/* =========================================
+   ESCAPE TEXT
+========================================= */
+
+function escapeHTML(text){
+
+  let div=document.createElement("div");
+
+  div.textContent=text;
+
+  return div.innerHTML;
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+updateTimer();
+renderAssignments();
+renderNotesSidebar();
+updateUI();
+
+</script>
+
+</body>
+</html>
