@@ -2574,6 +2574,38 @@ updateUI();
 const SUPABASE_URL = "https://xhhntltgezgejqjotyqk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_rGQfBDGdbCXlPinYHAsI6g_P-q31aL2";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  document.getElementById("signupBtn").onclick = async () => {
+  const username = document.getElementById("usernameInput").value.trim();
+  const password = document.getElementById("passwordInput").value;
+
+  if (!username || !password) {
+    document.getElementById("authMessage").textContent = "Enter a username and password";
+    return;
+  }
+
+  const email = username + "@jpstudysite.local";
+
+  const { error } = await supabaseClient.auth.signUp({
+    email,
+    password
+  });
+
+  document.getElementById("authMessage").textContent =
+    error ? error.message : "Account created!";
+};
+
+document.getElementById("loginBtn").onclick = async () => {
+  const username = document.getElementById("usernameInput").value.trim();
+  const password = document.getElementById("passwordInput").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email: username + "@jpstudysite.local",
+    password
+  });
+
+  document.getElementById("authMessage").textContent =
+    error ? error.message : "Logged in!";
+};
 </script>
 
 </body>
