@@ -2,480 +2,735 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>School Work Tracker</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>StudyOS</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+:root{
+  --bg:#f4f5f8;
+  --card:#fff;
+  --text:#171717;
+  --muted:#777;
+  --border:#e5e5e5;
+  --accent:#6c5ce7;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f5f7;
-  color: #171717;
+body.dark{
+  --bg:#111217;
+  --card:#1b1d24;
+  --text:#f5f5f5;
+  --muted:#aaa;
+  --border:#30323b;
 }
 
-header {
-  background: #111;
-  color: white;
-  padding: 22px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:.25s;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 24px;
+.app{
+  display:flex;
+  min-height:100vh;
 }
 
-.missing {
-  background: #ff3333;
-  padding: 10px 15px;
-  border-radius: 12px;
-  font-weight: bold;
+/* SIDEBAR */
+
+.sidebar{
+  width:235px;
+  background:var(--card);
+  border-right:1px solid var(--border);
+  padding:20px 14px;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  display:flex;
+  flex-direction:column;
 }
 
-.container {
-  max-width: 800px;
-  margin: 25px auto;
-  padding: 0 18px;
+.logo{
+  font-size:24px;
+  font-weight:800;
+  margin:8px 10px 30px;
 }
 
-.card {
-  background: white;
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 18px;
-  box-shadow: 0 3px 12px rgba(0,0,0,.08);
+.nav button{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--text);
+  padding:13px;
+  text-align:left;
+  border-radius:10px;
+  margin-bottom:5px;
+  cursor:pointer;
+  font-size:15px;
 }
 
-h2 {
-  margin-top: 0;
+.nav button:hover,
+.nav button.active{
+  background:var(--accent);
+  color:white;
 }
 
-label {
-  display: block;
-  margin-top: 14px;
-  font-weight: bold;
+.bottom{
+  margin-top:auto;
 }
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  border: 1px solid #ccc;
-  border-radius: 9px;
-  font-size: 15px;
+/* MAIN */
+
+.main{
+  margin-left:235px;
+  width:calc(100% - 235px);
+  padding:28px;
 }
 
-button {
-  border: none;
-  border-radius: 9px;
-  padding: 12px 16px;
-  cursor: pointer;
-  font-weight: bold;
+.page{
+  display:none;
+  max-width:1000px;
+  margin:auto;
 }
 
-.add-btn {
-  width: 100%;
-  margin-top: 20px;
-  background: #111;
-  color: white;
+.page.active{
+  display:block;
 }
 
-.class-box {
-  background: white;
-  border-radius: 13px;
-  margin-bottom: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
 }
 
-.class-header {
-  padding: 17px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  font-size: 18px;
+.topbar h1{
+  margin:0;
 }
 
-.assignments {
-  display: none;
-  border-top: 1px solid #eee;
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:18px;
 }
 
-.assignment {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  position: relative;
+/* PROFILE */
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:15px;
 }
 
-.assignment:last-child {
-  border-bottom: none;
+.profile-ring{
+  width:70px;
+  height:70px;
+  padding:4px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff2222,#ff2222);
+  box-shadow:0 0 12px #ff222288;
+  animation:pulse 2s infinite;
 }
 
-.assignment-name {
-  font-weight: bold;
-  font-size: 17px;
+.profile-ring img{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  background:#ddd;
 }
 
-.info {
-  color: #555;
-  margin-top: 5px;
-  line-height: 1.5;
+@keyframes pulse{
+  50%{box-shadow:0 0 24px var(--ring)}
 }
 
-.due {
-  margin-top: 8px;
-  font-weight: bold;
+.level{
+  font-size:14px;
+  color:var(--muted);
+  margin-top:4px;
 }
 
-.normal {
-  color: #555;
+.xpbar{
+  height:9px;
+  background:var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:12px;
 }
 
-.warning {
-  color: #e69500;
+.xpfill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#ff3333,#6c5ce7);
+  transition:.4s;
 }
 
-.danger {
-  color: #e00000;
+/* STATS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
 }
 
-.complete-btn {
-  background: #e9e9e9;
-  margin-top: 10px;
+.stat{
+  padding:18px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
 }
 
-.delete-btn {
-  background: #ffdddd;
-  color: #b00000;
-  margin-top: 10px;
-  margin-left: 5px;
+.stat-number{
+  font-size:28px;
+  font-weight:bold;
+  margin-top:7px;
 }
 
-.empty {
-  text-align: center;
-  color: #777;
-  padding: 25px;
+/* FORMS */
+
+label{
+  display:block;
+  font-weight:bold;
+  margin-top:15px;
 }
 
-.arrow {
-  transition: transform .2s;
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--bg);
+  color:var(--text);
 }
 
-.open .arrow {
-  transform: rotate(180deg);
+button{
+  cursor:pointer;
+}
+
+.primary{
+  background:var(--accent);
+  color:white;
+  border:0;
+  border-radius:10px;
+  padding:12px 17px;
+  font-weight:bold;
+}
+
+.full{
+  width:100%;
+  margin-top:18px;
+}
+
+/* ASSIGNMENTS */
+
+.class-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:12px;
+  overflow:hidden;
+}
+
+.class-header{
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.assignments{
+  display:none;
+  border-top:1px solid var(--border);
+}
+
+.assignment{
+  padding:17px;
+  border-bottom:1px solid var(--border);
+}
+
+.assignment:last-child{
+  border-bottom:0;
+}
+
+.assignment-name{
+  font-weight:bold;
+  font-size:17px;
+}
+
+.info{
+  color:var(--muted);
+  line-height:1.6;
+  margin-top:6px;
+}
+
+.due{
+  font-weight:bold;
+  margin-top:7px;
+}
+
+.normal{color:var(--muted)}
+.warning{color:#e69a00}
+.danger{color:#e00000}
+
+.small-btn{
+  border:0;
+  border-radius:8px;
+  padding:9px 12px;
+  margin-top:10px;
+}
+
+.complete{
+  background:#dff7e5;
+  color:#177333;
+}
+
+.delete{
+  background:#ffdede;
+  color:#a00000;
+  margin-left:5px;
+}
+
+/* STOPWATCH */
+
+.timer{
+  text-align:center;
+  font-size:65px;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin:35px 0;
+}
+
+.timer-buttons{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+
+.timer-buttons button{
+  border:0;
+  border-radius:10px;
+  padding:13px 22px;
+  font-weight:bold;
+}
+
+.start{background:#6c5ce7;color:white}
+.pause{background:#ddd}
+.reset{background:#ffdddd;color:#a00000}
+
+/* PROFILE PAGE */
+
+.avatar-preview{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#ddd;
+  display:block;
+  margin-bottom:15px;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+  .sidebar{
+    width:70px;
+    padding:15px 8px;
+  }
+
+  .logo{
+    font-size:0;
+    margin-bottom:25px;
+  }
+
+  .logo:after{
+    content:"S";
+    font-size:23px;
+  }
+
+  .nav button{
+    text-align:center;
+    font-size:0;
+  }
+
+  .nav button:first-letter{
+    font-size:20px;
+  }
+
+  .main{
+    margin-left:70px;
+    width:calc(100% - 70px);
+    padding:15px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>School Work</h1>
-  <div class="missing">
-    Missing: <span id="missingCount">0</span>
-  </div>
-</header>
+<div class="app">
 
-<div class="container">
+<aside class="sidebar">
 
-  <div class="card">
-    <h2>Add Assignment</h2>
+<div class="logo">StudyOS</div>
 
-    <label>What class?</label>
-    <input id="classInput" placeholder="Example: Math">
+<div class="nav">
 
-    <label>What type of assignment?</label>
-    <select id="typeInput">
-      <option>Homework</option>
-      <option>Quiz</option>
-      <option>Test</option>
-      <option>Project</option>
-      <option>Essay</option>
-      <option>Worksheet</option>
-      <option>Other</option>
-    </select>
+<button class="active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
 
-    <label>Rough time estimate</label>
-    <input id="timeInput" placeholder="Example: 30 minutes">
+<button onclick="showPage('assignments',this)">📚 Assignments</button>
 
-    <label>Name of assignment</label>
-    <input id="nameInput" placeholder="Example: Chapter 4 Review">
+<button onclick="showPage('study',this)">⏱ Study</button>
 
-    <label>Date due</label>
-    <input id="dateInput" type="date">
-
-    <button class="add-btn" onclick="addAssignment()">
-      Add Assignment
-    </button>
-  </div>
-
-  <div class="card">
-    <h2>My Work</h2>
-    <div id="dashboard"></div>
-  </div>
+<button onclick="showPage('profile',this)">👤 Profile</button>
 
 </div>
 
+<div class="bottom">
+
+<button class="nav button" onclick="showPage('settings',this)">
+⚙️ Settings
+</button>
+
+</div>
+
+</aside>
+
+
+<main class="main">
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+<div class="topbar">
+<h1>Dashboard</h1>
+</div>
+
+<div class="card">
+
+<div class="profile">
+
+<div class="profile-ring" id="dashboardRing">
+<img id="dashboardAvatar" src="">
+</div>
+
+<div>
+<strong id="dashboardName">Student</strong>
+<div class="level">
+Level <span id="dashboardLevel">1</span>
+•
+<span id="dashboardXP">0</span> XP
+</div>
+</div>
+
+</div>
+
+<div class="xpbar">
+<div class="xpfill" id="dashboardXPFill"></div>
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+Missing
+<div class="stat-number" id="missingCount">0</div>
+</div>
+
+<div class="stat">
+Assignments
+<div class="stat-number" id="assignmentCount">0</div>
+</div>
+
+<div class="stat">
+Study XP
+<div class="stat-number" id="studyXP">0</div>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ASSIGNMENTS -->
+
+<section id="assignments" class="page">
+
+<div class="topbar">
+<h1>Assignments</h1>
+</div>
+
+<div class="card">
+
+<h2>Add Assignment</h2>
+
+<label>What class?</label>
+<input id="classInput" placeholder="Example: Math">
+
+<label>What type?</label>
+<select id="typeInput">
+<option>Homework</option>
+<option>Quiz</option>
+<option>Test</option>
+<option>Project</option>
+<option>Essay</option>
+<option>Worksheet</option>
+<option>Other</option>
+</select>
+
+<label>Rough time estimate</label>
+<input id="timeInput" placeholder="Example: 30 minutes">
+
+<label>Name of assignment</label>
+<input id="nameInput" placeholder="Example: Chapter 4 Review">
+
+<label>Date due</label>
+<input id="dateInput" type="date">
+
+<button class="primary full" onclick="addAssignment()">
+Add Assignment
+</button>
+
+</div>
+
+<div id="assignmentList"></div>
+
+</section>
+
+
+<!-- STUDY -->
+
+<section id="study" class="page">
+
+<div class="topbar">
+<h1>Study Timer</h1>
+</div>
+
+<div class="card">
+
+<h2>Study Stopwatch</h2>
+
+<p style="color:var(--muted)">
+Every minute studied = <b>2 XP</b>
+</p>
+
+<div class="timer" id="timer">
+00:00:00
+</div>
+
+<div class="timer-buttons">
+
+<button class="start" onclick="startTimer()">Start</button>
+
+<button class="pause" onclick="pauseTimer()">Pause</button>
+
+<button class="reset" onclick="resetTimer()">Reset</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section id="profile" class="page">
+
+<div class="topbar">
+<h1>Profile</h1>
+</div>
+
+<div class="card">
+
+<h2>Your Profile</h2>
+
+<div class="profile">
+
+<div class="profile-ring">
+<img id="profileAvatar" src="">
+</div>
+
+<div>
+<h3 id="profileNameText">Student</h3>
+<div>
+Level <span id="profileLevel">1</span>
+</div>
+</div>
+
+</div>
+
+<label>Your name</label>
+<input id="nameInputProfile" placeholder="Your name">
+
+<label>Profile picture</label>
+<input type="file" id="avatarInput" accept="image/*">
+
+<button class="primary full" onclick="saveProfile()">
+Save Profile
+</button>
+
+</div>
+
+</section>
+
+
+<!-- SETTINGS -->
+
+<section id="settings" class="page">
+
+<div class="topbar">
+<h1>Settings</h1>
+</div>
+
+<div class="card">
+
+<h2>Appearance</h2>
+
+<label>
+Dark Mode
+</label>
+
+<select id="darkMode" onchange="changeTheme()">
+<option value="off">Off</option>
+<option value="on">On</option>
+</select>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+
 <script>
 
-let assignments = JSON.parse(localStorage.getItem("schoolAssignments")) || [];
+/* =========================
+   DATA
+========================= */
 
-function save() {
-  localStorage.setItem("schoolAssignments", JSON.stringify(assignments));
-}
+let assignments =
+JSON.parse(localStorage.getItem("assignments")) || [];
 
-function addAssignment() {
+let user =
+JSON.parse(localStorage.getItem("studyUser")) || {
 
-  const className = document.getElementById("classInput").value.trim();
-  const type = document.getElementById("typeInput").value;
-  const time = document.getElementById("timeInput").value.trim();
-  const name = document.getElementById("nameInput").value.trim();
-  const due = document.getElementById("dateInput").value;
+name:"Student",
 
-  if (!className || !name || !due) {
-    alert("Fill in the class, assignment name, and due date.");
-    return;
-  }
+avatar:"",
 
-  assignments.push({
-    id: Date.now(),
-    className,
-    type,
-    time,
-    name,
-    due
-  });
+xp:0
 
-  save();
+};
 
-  document.getElementById("classInput").value = "";
-  document.getElementById("timeInput").value = "";
-  document.getElementById("nameInput").value = "";
-  document.getElementById("dateInput").value = "";
 
-  render();
-}
+/* =========================
+   LEVEL SYSTEM
+========================= */
 
-function getDaysUntil(dateString) {
+function xpForLevel(level){
 
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const due = new Date(dateString + "T00:00:00");
-
-  const difference = due - today;
-
-  return Math.ceil(difference / (1000 * 60 * 60 * 24));
-}
-
-function formatDate(dateString) {
-
-  const date = new Date(dateString + "T00:00:00");
-
-  return date.toLocaleDateString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric"
-  });
-}
-
-function render() {
-
-  const dashboard = document.getElementById("dashboard");
-
-  if (assignments.length === 0) {
-    dashboard.innerHTML =
-      '<div class="empty">No assignments yet.</div>';
-
-    document.getElementById("missingCount").textContent = "0";
-    return;
-  }
-
-  assignments.sort((a,b) =>
-    new Date(a.due) - new Date(b.due)
-  );
-
-  /*
-    Group assignments by class
-  */
-
-  const classes = {};
-
-  assignments.forEach(assignment => {
-
-    if (!classes[assignment.className]) {
-      classes[assignment.className] = [];
-    }
-
-    classes[assignment.className].push(assignment);
-
-  });
-
-  /*
-    Sort classes by their soonest assignment
-  */
-
-  const sortedClasses = Object.keys(classes).sort((a,b) => {
-
-    const aDate = new Date(classes[a][0].due);
-    const bDate = new Date(classes[b][0].due);
-
-    return aDate - bDate;
-
-  });
-
-  dashboard.innerHTML = "";
-
-  sortedClasses.forEach(className => {
-
-    const box = document.createElement("div");
-    box.className = "class-box";
-
-    const header = document.createElement("div");
-    header.className = "class-header";
-
-    header.innerHTML = `
-      <span>${escapeHTML(className)}</span>
-      <span class="arrow">▼</span>
-    `;
-
-    const assignmentsDiv = document.createElement("div");
-    assignmentsDiv.className = "assignments";
-
-    header.onclick = () => {
-
-      const isOpen =
-        assignmentsDiv.style.display === "block";
-
-      assignmentsDiv.style.display =
-        isOpen ? "none" : "block";
-
-      box.classList.toggle("open", !isOpen);
-    };
-
-    classes[className].forEach(assignment => {
-
-      const days = getDaysUntil(assignment.due);
-
-      let dueText;
-      let dueClass;
-
-      if (days < 0) {
-        dueText =
-          `OVERDUE by ${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"}`;
-        dueClass = "danger";
-
-      } else if (days === 0) {
-        dueText = "DUE TODAY";
-        dueClass = "danger";
-
-      } else if (days === 1) {
-        dueText = "Due tomorrow";
-        dueClass = "danger";
-
-      } else if (days <= 3) {
-        dueText = `Due in ${days} days`;
-        dueClass = "warning";
-
-      } else {
-        dueText = `Due in ${days} days`;
-        dueClass = "normal";
-      }
-
-      const assignmentDiv =
-        document.createElement("div");
-
-      assignmentDiv.className = "assignment";
-
-      assignmentDiv.innerHTML = `
-        <div class="assignment-name">
-          ${escapeHTML(assignment.name)}
-        </div>
-
-        <div class="info">
-          Type: ${escapeHTML(assignment.type)}<br>
-          ${assignment.time
-            ? `Time estimate: ${escapeHTML(assignment.time)}<br>`
-            : ""}
-          Due: ${formatDate(assignment.due)}
-        </div>
-
-        <div class="due ${dueClass}">
-          ${dueText}
-        </div>
-
-        <button class="complete-btn"
-          onclick="completeAssignment(${assignment.id})">
-          ✓ Complete
-        </button>
-
-        <button class="delete-btn"
-          onclick="deleteAssignment(${assignment.id})">
-          Delete
-        </button>
-      `;
-
-      assignmentsDiv.appendChild(assignmentDiv);
-
-    });
-
-    box.appendChild(header);
-    box.appendChild(assignmentsDiv);
-
-    dashboard.appendChild(box);
-
-  });
-
-  updateMissing();
+return Math.floor(
+100 * Math.pow(1.45, level - 1)
+);
 
 }
 
-function updateMissing() {
+function getLevel(){
 
-  const missing = assignments.filter(a =>
-    getDaysUntil(a.due) < 0
-  ).length;
+let level = 1;
 
-  document.getElementById("missingCount").textContent =
-    missing;
+let xp = user.xp;
+
+while(xp >= xpForLevel(level)){
+
+xp -= xpForLevel(level);
+
+level++;
+
 }
 
-function completeAssignment(id) {
+return level;
 
-  assignments =
-    assignments.filter(a => a.id !== id);
-
-  save();
-  render();
 }
 
-function deleteAssignment(id) {
+function getLevelProgress(){
 
-  assignments =
-    assignments.filter(a => a.id !== id);
+let level = getLevel();
 
-  save();
-  render();
+let totalBefore = 0;
+
+for(let i=1;i<level;i++){
+
+totalBefore += xpForLevel(i);
+
 }
 
-function escapeHTML(text) {
+let currentXP = user.xp - totalBefore;
 
-  const div = document.createElement("div");
-  div.textContent = text;
+let needed = xpForLevel(level);
 
-  return div.innerHTML;
+return {
+level,
+current:currentXP,
+needed,
+percent:(currentXP/needed)*100
+};
+
 }
 
-render();
 
-</script>
+/* =========================
+   XP
+========================= */
 
-</body>
-</html>
+function addXP(amount){
+
+user.xp += amount;
+
+saveUser();
+
+updateUI();
+
+}
+
+function saveUser(){
+
+localStorage.setItem(
+"studyUser",
+JSON.stringify(user)
+);
+
+}
+
+
+/* =========================
+   PROFILE RING
+========================= */
+
+function updateRing(){
+
+let level = getLevel();
+
+let color1;
+let color2;
+
+if(level < 5){
+
+color1="#ff2222";
+col
