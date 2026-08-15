@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Work Tracker</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f5f7;
+  color: #171717;
+}
+
+header {
+  background: #111;
+  color: white;
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.missing {
+  background: #ff3333;
+  padding: 10px 15px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.container {
+  max-width: 800px;
+  margin: 25px auto;
+  padding: 0 18px;
+}
+
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  margin-top: 14px;
+  font-weight: bold;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 9px;
+  font-size: 15px;
+}
+
+button {
+  border: none;
+  border-radius: 9px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.add-btn {
+  width: 100%;
+  margin-top: 20px;
+  background: #111;
+  color: white;
+}
+
+.class-box {
+  background: white;
+  border-radius: 13px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.class-header {
+  padding: 17px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.assignments {
+  display: none;
+  border-top: 1px solid #eee;
+}
+
+.assignment {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
+
+.assignment:last-child {
+  border-bottom: none;
+}
+
+.assignment-name {
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.info {
+  color: #555;
+  margin-top: 5px;
+  line-height: 1.5;
+}
+
+.due {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.normal {
+  color: #555;
+}
+
+.warning {
+  color: #e69500;
+}
+
+.danger {
+  color: #e00000;
+}
+
+.complete-btn {
+  background: #e9e9e9;
+  margin-top: 10px;
+}
+
+.delete-btn {
+  background: #ffdddd;
+  color: #b00000;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 25px;
+}
+
+.arrow {
+  transition: transform .2s;
+}
+
+.open .arrow {
+  transform: rotate(180deg);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>School Work</h1>
+  <div class="missing">
+    Missing: <span id="missingCount">0</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Add Assignment</h2>
+
+    <label>What class?</label>
+    <input id="classInput" placeholder="Example: Math">
+
+    <label>What type of assignment?</label>
+    <select id="typeInput">
+      <option>Homework</option>
+      <option>Quiz</option>
+      <option>Test</option>
+      <option>Project</option>
+      <option>Essay</option>
+      <option>Worksheet</option>
+      <option>Other</option>
+    </select>
+
+    <label>Rough time estimate</label>
+    <input id="timeInput" placeholder="Example: 30 minutes">
+
+    <label>Name of assignment</label>
+    <input id="nameInput" placeholder="Example: Chapter 4 Review">
+
+    <label>Date due</label>
+    <input id="dateInput" type="date">
+
+    <button class="add-btn" onclick="addAssignment()">
+      Add Assignment
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>My Work</h2>
+    <div id="dashboard"></div>
+  </div>
+
+</div>
+
+<script>
+
+let assignments = JSON.parse(localStorage.getItem("schoolAssignments")) || [];
+
+function save() {
+  localStorage.setItem("schoolAssignments", JSON.stringify(assignments));
+}
+
+function addAssignment() {
+
+  const className = document.getElementById("classInput").value.trim();
+  const type = document.getElementById("typeInput").value;
+  const time = document.getElementById("timeInput").value.trim();
+  const name = document.getElementById("nameInput").value.trim();
+  const due = document.getElementById("dateInput").value;
+
+  if (!className || !name || !due) {
+    alert("Fill in the class, assignment name, and due date.");
+    return;
+  }
+
+  assignments.push({
+    id: Date.now(),
+    className,
+    type,
+    time,
+    name,
+    due
+  });
+
+  save();
+
+  document.getElementById("classInput").value = "";
+  document.getElementById("timeInput").value = "";
+  document.getElementById("nameInput").value = "";
+  document.getElementById("dateInput").value = "";
+
+  render();
+}
+
+function getDaysUntil(dateString) {
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const due = new Date(dateString + "T00:00:00");
+
+  const difference = due - today;
+
+  return Math.ceil(difference / (1000 * 60 * 60 * 24));
+}
+
+function formatDate(dateString) {
+
+  const date = new Date(dateString + "T00:00:00");
+
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function render() {
+
+  const dashboard = document.getElementById("dashboard");
+
+  if (assignments.length === 0) {
+    dashboard.innerHTML =
+      '<div class="empty">No assignments yet.</div>';
+
+    document.getElementById("missingCount").textContent = "0";
+    return;
+  }
+
+  assignments.sort((a,b) =>
+    new Date(a.due) - new Date(b.due)
+  );
+
+  /*
+    Group assignments by class
+  */
+
+  const classes = {};
+
+  assignments.forEach(assignment => {
+
+    if (!classes[assignment.className]) {
+      classes[assignment.className] = [];
+    }
+
+    classes[assignment.className].push(assignment);
+
+  });
+
+  /*
+    Sort classes by their soonest assignment
+  */
+
+  const sortedClasses = Object.keys(classes).sort((a,b) => {
+
+    const aDate = new Date(classes[a][0].due);
+    const bDate = new Date(classes[b][0].due);
+
+    return aDate - bDate;
+
+  });
+
+  dashboard.innerHTML = "";
+
+  sortedClasses.forEach(className => {
+
+    const box = document.createElement("div");
+    box.className = "class-box";
+
+    const header = document.createElement("div");
+    header.className = "class-header";
+
+    header.innerHTML = `
+      <span>${escapeHTML(className)}</span>
+      <span class="arrow">▼</span>
+    `;
+
+    const assignmentsDiv = document.createElement("div");
+    assignmentsDiv.className = "assignments";
+
+    header.onclick = () => {
+
+      const isOpen =
+        assignmentsDiv.style.display === "block";
+
+      assignmentsDiv.style.display =
+        isOpen ? "none" : "block";
+
+      box.classList.toggle("open", !isOpen);
+    };
+
+    classes[className].forEach(assignment => {
+
+      const days = getDaysUntil(assignment.due);
+
+      let dueText;
+      let dueClass;
+
+      if (days < 0) {
+        dueText =
+          `OVERDUE by ${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"}`;
+        dueClass = "danger";
+
+      } else if (days === 0) {
+        dueText = "DUE TODAY";
+        dueClass = "danger";
+
+      } else if (days === 1) {
+        dueText = "Due tomorrow";
+        dueClass = "danger";
+
+      } else if (days <= 3) {
+        dueText = `Due in ${days} days`;
+        dueClass = "warning";
+
+      } else {
+        dueText = `Due in ${days} days`;
+        dueClass = "normal";
+      }
+
+      const assignmentDiv =
+        document.createElement("div");
+
+      assignmentDiv.className = "assignment";
+
+      assignmentDiv.innerHTML = `
+        <div class="assignment-name">
+          ${escapeHTML(assignment.name)}
+        </div>
+
+        <div class="info">
+          Type: ${escapeHTML(assignment.type)}<br>
+          ${assignment.time
+            ? `Time estimate: ${escapeHTML(assignment.time)}<br>`
+            : ""}
+          Due: ${formatDate(assignment.due)}
+        </div>
+
+        <div class="due ${dueClass}">
+          ${dueText}
+        </div>
+
+        <button class="complete-btn"
+          onclick="completeAssignment(${assignment.id})">
+          ✓ Complete
+        </button>
+
+        <button class="delete-btn"
+          onclick="deleteAssignment(${assignment.id})">
+          Delete
+        </button>
+      `;
+
+      assignmentsDiv.appendChild(assignmentDiv);
+
+    });
+
+    box.appendChild(header);
+    box.appendChild(assignmentsDiv);
+
+    dashboard.appendChild(box);
+
+  });
+
+  updateMissing();
+
+}
+
+function updateMissing() {
+
+  const missing = assignments.filter(a =>
+    getDaysUntil(a.due) < 0
+  ).length;
+
+  document.getElementById("missingCount").textContent =
+    missing;
+}
+
+function completeAssignment(id) {
+
+  assignments =
+    assignments.filter(a => a.id !== id);
+
+  save();
+  render();
+}
+
+function deleteAssignment(id) {
+
+  assignments =
+    assignments.filter(a => a.id !== id);
+
+  save();
+  render();
+}
+
+function escapeHTML(text) {
+
+  const div = document.createElement("div");
+  div.textContent = text;
+
+  return div.innerHTML;
+}
+
+render();
+
+</script>
+
+</body>
+</html>
